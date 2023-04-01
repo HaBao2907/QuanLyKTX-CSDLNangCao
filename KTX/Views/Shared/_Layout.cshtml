@@ -1,0 +1,163 @@
+﻿@using LibNetCore.Web;
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>@ViewData["Title"] - KTX</title>
+
+        <link rel="stylesheet" href="~/build/bundle.min.css"
+            asp-append-version="true" />
+    @Html.RegisterCssFromResource()
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"
+            />
+
+
+        <script src="~/lib/Vuejs/vue.global.prod.js" asp-append-version="true"></script>
+        <script src="~/build/bundle.min.js" asp-append-version="true"></script>
+    @Html.RegisterJsFromResource()
+        <script src="~/js/site.js" asp-append-version="true"></script>
+
+    </head>
+    <body>
+        <header>
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm
+                navbar-light bg-white border-bottom box-shadow mb-3">
+                <div class="container-fluid">
+                    <a class="navbar-brand ml-2 mr-2" asp-area=""
+                        asp-controller="Home" asp-action="Index">Quản lý Ký túc
+                        xá</a>
+                    <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target=".navbar-collapse"
+                        aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="navbar-collapse collapse d-sm-inline-flex
+                        justify-content-between">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdown" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Danh mục
+                                </a>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/BoPhan">Bộ phận</a>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/ChucVu">Chức vụ</a>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/DichVu">Dịch vụ</a>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/ThietBi">Thiết bị</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/LoaiPhong">Loại phòng</a>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/khu">Khu</a>
+                                    <a class="dropdown-item"
+                                        href="/DanhMuc/Phong">Phòng</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdownNV" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Nhân viên
+                                </a>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="navbarDropdownNV">
+                                    <a class="dropdown-item"
+                                        href="/Home/NhanVien">Danh sách nhân
+                                        viên</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdownSV" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Sinh viên
+                                </a>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="navbarDropdownSV">
+                                    <a class="dropdown-item"
+                                        href="/Home/SinhVien">Danh sách sinh
+                                        viên</a>
+                                </div>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdownNVU" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Nghiệp vụ
+                                </a>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="navbarDropdownNVU">
+                                    <a class="dropdown-item"
+                                        href="/NghiepVu/DangKy">Đăng ký ở</a>
+                                    <a class="dropdown-item"
+                                        href="/NghiepVu/BaoHong">Báo hỏng thiết
+                                        bị</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item"
+                                        href="/NghiepVu/ThanhToanDichVu">Thanh
+                                        toán dịch vụ</a>
+                                </div>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#"
+                                    id="navbarDropdownNSD" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true"
+                                    aria-expanded="false">
+                                    Xin chào:
+                                </a>
+                                <div class="dropdown-menu"
+                                    aria-labelledby="navbarDropdownNSD">
+                                    <a class="dropdown-item" href="#">Đăng xuất</a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="container">
+            <main role="main" class="pb-3">
+            @RenderBody()
+            </main>
+        </div>
+
+        <footer class="border-top footer text-muted">
+            <div class="container">
+                &copy; 2023 - KTX - <a asp-area="" asp-controller="Home"
+                    asp-action="Privacy">Privacy</a>
+            </div>
+        </footer>
+    @await RenderSectionAsync("Scripts", required: false)
+
+        <script type="text/javascript">
+
+        $(function () {
+            var nsd = window.localStorage.getItem("nsd");
+            if (nsd == null || nsd == undefined)
+                        {
+                window.location.assign("/login");
+            }
+            else {
+                var duLieu=JSON.parse(nsd);
+                $("#navbarDropdownNSD").html("Xin chào : " + duLieu.TenDaiDien);
+            }
+        });
+
+    </script>
+    </body>
+</html>

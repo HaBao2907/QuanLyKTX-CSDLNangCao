@@ -1,0 +1,226 @@
+﻿@{
+    ViewData["Title"] = "Danh sách sinh viên";
+}
+
+
+<div class="row" id="SinhVien" v-cloak>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <div class="card" style="width:100%">
+            <div class="card-header text-body text-bold">
+                Danh sách sinh viên
+            </div>
+            <div class="card-body">
+                <div class="row" style="padding-bottom:5px;">
+                    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+                        <b-button variant="info" size="sm" model="modal-lg" v-on:click="ThemMoiSinhVien">
+                            <i class="fa fa-plus-circle " aria-hidden="true" style="padding-right:10px;"></i>
+                            Thêm mới sinh viên
+                        </b-button>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
+                        <grid id="gridSinhVien" ref="gridSinhVien" v-bind:columns="cols" v-bind:config="option"
+                              height="500px"> </grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <b-modal id="modelSinhVien" size="lg" title="Thông tin sinh viên" no-close-on-backdrop="true"
+                 class="bootstrap-dialog-draggable">
+            <b-container fluid>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Mã sinh viên</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="MA" focus placeholder="Mã sinh viên" v-model="duLieu.MA" dataType="String"
+                                 title="Mã sinh viên" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Tên sinh viên</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="Ten" focus placeholder="Tên sinh viên" v-model="duLieu.TEN" dataType="String"
+                                 title="Tên sinh viên" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Ngành đào tạo</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="KHOA" focus placeholder="Ngành đào tạo" v-model="duLieu.KHOA" dataType="String"
+                                 title="Ngành đào tạo không nhập trống" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Số điện thoại</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="DIENTHOAI" focus placeholder="Số điện thoại" v-model="duLieu.DIENTHOAI" dataType="String"
+                                 title="Số điện thoại không nhập trống" required="true"> </vue-txt>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Ngày sinh</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="NGAYSINH" focus placeholder="Ngày sinh" v-model="duLieu.NGAYSINH" dataType="Date"
+                                 title=" Ngày sinh  "> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Email </label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="EMAIL" focus placeholder="Email" v-model="duLieu.EMAIL" dataType="String"
+                                 title="Email không nhập trống" required="true"> </vue-txt>
+                    </div>
+                </b-row><b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">CMT</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="CHUNGMINHTHU" focus placeholder="Số chứng minh thư " v-model="duLieu.CHUNGMINHTHU" dataType="String" > </vue-txt>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Giới tính</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <select2 id="KHUID" ref="fropGioiTinh" style="width:90%!important" :options="dsGioiTinh"
+                                 v-model="duLieu.GIOITINH">
+                        </select2>
+                    </div>
+                </b-row>
+            </b-container>
+            <template v-slot:modal-footer>
+                <b-row>
+                    <b-col cols="12">
+                        <b-button variant="info" size="sm" class="mr-1" v-on:click="LuulaiThongTin">
+                            <i class="fa fa-save" aria-hidden="true" style="padding-right:10px;"></i>
+                            Lưu lại
+                        </b-button>
+                    </b-col>
+                </b-row>
+            </template>
+        </b-modal>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const { createApp, onMounted, ref, reactive } = Vue
+
+
+    var Vuejs = createApp({
+        setup: function (props, ctx) {
+
+            const cols = reactive([
+                { id: "MA", name: "Mã sinh viên", field: "MA", minWidth: 120, filterType: "text" },
+                { id: "TEN", name: "Họ và tên", field: "TEN", minWidth: 200, filterType: "text" },
+                { id: "KHOA", name: "Khoa đăng ký học", field: "KHOA", minWidth: 200, filterType: "text" },
+                { id: "GIOITINH", name: "Giới tính", field: "GIOITINH", minWidth: 120, filterType: "text" },
+                { id: "DIENTHOAI", name: "Số điện thoại", field: "DIENTHOAI", minWidth: 120, filterType: "text" },
+                { id: "CHON", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButton, filterType: "none" }
+            ]);
+
+            const option = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+            });
+            const duLieu = reactive();
+            const dsGioiTinh=reactive([{id: "Nam", text: "Nam"}, {id: "Nữ", text: "Nữ"}, {id: "Khác", "text": "Khác" }]);
+
+            onMounted(() => {
+                loadThongTin();
+            });
+
+            function ThemMoiSinhVien() {
+                Reset();
+                Vuejs.$bvModal.show("modelSinhVien");
+            }
+
+            function LuulaiThongTin() {
+                if (!checkIsValid("modelSinhVien")) {
+                    return false;
+                }
+
+                var newUrl = danhMuc.urlSinhVienNhap
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(Vuejs.duLieu),
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.$refs.gridSinhVien.setDataSource(b_data);
+                        Vuejs.$bvModal.hide("modelSinhVien");
+                    }
+                });
+            }
+
+            return {
+                cols, duLieu, option, dsGioiTinh,
+                ThemMoiSinhVien, LuulaiThongTin
+            }
+        }
+    }).mount('#SinhVien');
+
+
+    function AddButton(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += " <button  class='btn btn-info btn-sm' onclick=\"Xemchitiet('" + dataContext.Id + "', " + row + ")\"><i class='glyphicon glyphicon-edit'></i></button>";
+            str += "<button  onclick=\"Xoathongtin('" + dataContext.MA + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+
+    function Reset() {
+        Vuejs.duLieu = { TEN: '', ID: 0 };
+    }
+
+    function Xemchitiet(Id, row) {
+        Vuejs.duLieu = Vuejs.$refs.gridSinhVien.getDataByRowIndex(row);
+        Vuejs.$bvModal.show("modelSinhVien");
+    }
+
+
+    function Xoathongtin(id, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlSinhVienXoa + "?Id=" + id;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridSinhVien.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function loadThongTin() {
+        var newUrl = danhMuc.urlNVSinhVienDK
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridSinhVien.setDataSource(b_data);
+            }
+        });
+    }
+</script>

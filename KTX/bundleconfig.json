@@ -1,0 +1,58 @@
+[
+  {
+    "outputFileName": "wwwroot/build/bundle.js",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/js/jquery.min.js",
+      "wwwroot/lib/jquery/dist/js/jquery-ui.min.js",
+      "wwwroot/lib/moment/moment.min.js",
+      "wwwroot/lib/jquery/dist/js/jquery.blockUI.js",
+      "wwwroot/lib/jquery/dist/js/popper.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap.bundle.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap-dialog.min.js",
+      "wwwroot/lib/select2/js/select2.min.js",
+      "wwwroot/lib/jquery/dist/js/lodash.min.js",
+      "wwwroot/lib/bootstrap/dist/js/polyfill.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap-vue.min.js",
+      "wwwroot/lib/bootstrap/dist/js/bootstrap-vue-icons.min.js",
+      "wwwroot/lib/LTE/js/adminlte.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  },
+  {
+    "outputFileName": "wwwroot/build/bundle.css",
+    "inputFiles": [
+      "wwwroot/lib/jquery/dist/css/jquery-ui.theme.min.css",
+      "wwwroot/lib/jquery/dist/css/jquery-ui.min.css",
+      "wwwroot/lib/fonts/css/all.min.css",
+      "wwwroot/lib/fonts/css/font-awesome.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap.min.css",
+      "wwwroot/lib/select2/css/select2.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap-vue.min.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap-dialog.css",
+      "wwwroot/lib/bootstrap/dist/css/bootstrap-glyphicons.min.css",
+      "wwwroot/lib/LTE/css/adminlte.min.css",
+      "wwwroot/css/site.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }, 
+  {
+    "outputFileName": "wwwroot/build/site.js",
+    "inputFiles": [
+      "wwwroot/js/site.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    },
+    "sourceMap": false
+  }
+
+]

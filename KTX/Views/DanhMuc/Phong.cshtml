@@ -1,0 +1,416 @@
+﻿@{
+    ViewData["Title"] = "Danh Mục phòng";
+}
+
+
+<div class="row" id="Phong" v-cloak>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <div class="card" style="width:100%">
+            <div class="card-header text-body text-bold">
+                Danh mục phòng
+            </div>
+            <div class="card-body">
+                <div class="row" style="padding-bottom:5px;">
+                    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+                        <b-button variant="info" size="sm" model="modal-lg"
+                                  v-on:click="ThemMoiPhong">
+                            <i class="fa fa-plus-circle " aria-hidden="true"
+                               style="padding-right:10px;"></i>
+                            Thêm mới phòng
+                        </b-button>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
+                        <grid id="gridPhong" ref="gridPhong"
+                              v-bind:columns="cols" v-bind:config="option"
+                              height="500px"> </grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <b-modal id="modelPhong" size="lg" title="Thông tin phòng"
+                 no-close-on-backdrop="true"
+                 class="bootstrap-dialog-draggable">
+            <b-container fluid>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Khu vực (Tòa)</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="KHUID" ref="dropKhu"
+                                 style="width:90%!important" :options="dsKhu"
+                                 v-model="duLieu.KHUID">
+                        </select2>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Loại phòng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="dropLoai" ref="dropLoai"
+                                 style="width:90%!important" :options="dsLoai"
+                                 v-model="duLieu.LOAIID">
+                        </select2>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Tên</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <vue-txt id="Ten" focus placeholder="Tên phòng"
+                                 v-model="duLieu.TEN" dataType="String"
+                                 title="Tên phòng" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Số lượng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <vue-txt id="Ten" focus placeholder="Số lượng người
+                            trong phòng" v-model="duLieu.SOLUONG"
+                                 dataType="Number"
+                                 title="Phải nhập số lượng người được phép trong
+                            phòng" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <b-col cols="12" class="mt-0">
+                        <b-card no-body deck>
+                            <b-tabs card>
+                                <b-tab title="Danh sách thiết bị">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12
+                                            col-sm-12 col-sx-12">
+                                            <grid id="gridThietBi"
+                                                  ref="gridThietBi"
+                                                  v-bind:columns="colsThietBi"
+                                                  v-on:befor-edit-cell="griThietBi_BeforEdit"
+                                                  v-bind:config="optionKhac"
+                                                  height="300px"> </grid>
+                                        </div>
+                                    </div>
+                                </b-tab>
+                                <b-tab title="Thông tin dịch vụ đi kèm">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12
+                                            col-sm-12 col-sx-12">
+                                            <grid id="gridDichVu"
+                                                  ref="gridDichVu"
+                                                  v-bind:columns="colsDichVu"
+                                                  v-on:befor-edit-cell="griđichvu_BeforEdit"
+                                                  v-bind:config="optionKhac"
+                                                  height="300px"> </grid>
+                                        </div>
+                                    </div>
+                                </b-tab>
+                            </b-tabs>
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </b-container>
+            <template v-slot:modal-footer>
+                <b-row>
+                    <b-col cols="12">
+                        <b-button variant="info" size="sm" class="mr-1"
+                                  v-on:click="LuulaiThongTin">
+                            <i class="fa fa-save" aria-hidden="true"
+                               style="padding-right:10px;"></i>
+                            Lưu lại
+                        </b-button>
+                    </b-col>
+                </b-row>
+            </template>
+        </b-modal>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const { createApp, onMounted, ref, reactive } = Vue
+
+
+    var Vuejs = createApp({
+        data() {
+            return {
+                dsDichVu: []
+            }
+        },
+        setup: function (props, ctx) {
+
+            const cols = reactive([
+                { id: "KHU", name: "Khu", field: "KHU", minWidth: 150, filterType: "text" },
+                { id: "LOAI", name: "Loại phòng", field: "LOAI", minWidth: 150, filterType: "text" },
+                { id: "Ten", name: "Tên", field: "TEN", minWidth: 200, filterType: "text" },
+                { id: "SOLUONG", name: "Số lượng", field: "SOLUONG", minWidth: 120, filterType: "text", dataType: "Number" },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButton, filterType: "none" }
+            ]);
+            const colsThietBi = reactive([
+                { id: "THIETBI", name: "ThietBi", field: "THIETBI", minWidth: 200, filterType: "text", editor: Slick.Editors.Select2 },
+                { id: "SOLUONG", name: "Số lượng", field: "SOLUONG", minWidth: 120, filterType: "text", dataType: "Number", editorType: "text" },
+                { id: "TRANG_THAI", name: "Tình trạng", field: "TRANG_THAI", minWidth: 200, filterType: "none", formatter: FormatTrangThai },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButtonThietBi, filterType: "none" }
+            ]);
+            const colsDichVu = reactive([
+                { id: "TEN", name: "ThietBi", field: "DICHVU", minWidth: 200, filterType: "text", editor: Slick.Editors.Select2 },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButtonThietBi, filterType: "none" }
+            ]);
+
+            const option = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+            });
+
+            const optionKhac = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+                width: 710
+            });
+
+            const duLieu = reactive({});
+            const dsKhu = reactive({});
+            const dsLoai = reactive({});
+            const dsThietBi = reactive({});
+
+            onMounted(() => {
+                loadThongTin();
+                loadConfig();
+            });
+
+
+            function ThemMoiPhong() {
+                Reset();
+                Vuejs.$bvModal.show("modelPhong");
+            }
+
+            function LuulaiThongTin() {
+                if (!checkIsValid("modelPhong")) {
+                    return false;
+                }
+                var duLieu = Vuejs.$refs.gridThietBi.getData();
+                if (duLieu.length > 0) {
+                    var tim = duLieu.filter(function (val, index) {
+                        return val.SOLUONG == "";
+                    });
+
+                    if (tim.length > 0) {
+                        showError("danger", "Số lượng không nhập trống");
+                        return;
+                    }
+                }
+
+                 var dichVu = Vuejs.$refs.gridDichVu.getData();
+
+                Vuejs.duLieu.THIET_BI = duLieu;
+                Vuejs.duLieu.DICH_VU = dichVu;
+
+               
+
+                var newUrl = danhMuc.urlPhongNhap
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(Vuejs.duLieu),
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.$refs.gridPhong.setDataSource(b_data);
+                        Vuejs.$bvModal.hide("modelPhong");
+                    }
+                });
+            }
+
+            function griThietBi_BeforEdit(row, cell, val, cols, data) {
+                if (cell == 0) {
+                    cols.dataSource = Vuejs.dsThietBi;
+                }
+            }
+            function griđichvu_BeforEdit(row, cell, val, cols, data) {
+                if (cell == 0) {
+                    cols.dataSource = Vuejs.dsDichVu;
+                }
+            }
+
+            return {
+                cols, duLieu, option, dsLoai, dsKhu, dsThietBi, colsThietBi, optionKhac, colsDichVu,
+                ThemMoiPhong, LuulaiThongTin, griThietBi_BeforEdit, griđichvu_BeforEdit
+            }
+        }
+    }).mount('#Phong');
+
+
+    function FormatTrangThai(row, cell, value, columnDef, dataContext) {
+        if (value.toString() != "") {
+            var str = "";
+            if (value.toString() == "0")
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-success">Thiết bị đang sử dụng</span></div>';
+            else
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-danger">Thiết bị hỏng</span></div>';
+            return str;
+        }
+        else return value;
+    }
+
+    function AddButton(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += " <button  class='btn btn-info btn-sm' onclick=\"Xemchitiet('" + dataContext.ID + "', " + row + ")\"><i class='glyphicon glyphicon-edit'></i></button>";
+            str += "<button  onclick=\"Xoathongtin('" + dataContext.ID + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+    function AddButtonThietBi(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += "<button  onclick=\"XoathongtinTB('" + dataContext.PHONGID + "','" + dataContext.IDTHIETBI + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+
+    function Reset() {
+        Vuejs.duLieu = { TEN: '', ID: 0 };
+    }
+
+    function Xemchitiet(Id, row) {
+        Vuejs.duLieu = Vuejs.$refs.gridPhong.getDataByRowIndex(row);
+        Vuejs.$bvModal.show("modelPhong");
+
+        var newUrl = danhMuc.urlPhongChiTiet + "?IdPhong=" + Id;
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridThietBi.setDataSource(b_data);
+            }
+        });
+
+
+    }
+
+    function XoathongtinTB(IdPhong, IdTb, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlPhongChiTietXoa + "?IdPhong=" + IdPhong + "&IdThietBi=" + IdTb;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridThietBi.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function Xoathongtin(id, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlPhongXoa + "?Id=" + id;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridPhong.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function loadConfig() {
+        var newUrl = danhMuc.urlKhuLKe
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsKhu = [];
+
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsKhu.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+
+        var newUrl = danhMuc.urlLoaiPhongLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsLoai = [];
+
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsLoai.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+
+        var newUrl = danhMuc.urlThietBiLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsThietBi = [];
+
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsThietBi.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+
+        var newUrl = danhMuc.urlDichVuLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsDichVu = [];
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsDichVu.push({ "id": val.ID, "text": val.TEN });
+                });
+            }
+        });
+    }
+
+    function loadThongTin() {
+        var newUrl = danhMuc.urlPhongLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridPhong.setDataSource(b_data);
+            }
+        });
+    }
+</script>

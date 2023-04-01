@@ -1,0 +1,229 @@
+﻿@{
+    ViewData["Title"] = "Danh sách nhân viên";
+}
+
+
+<div class="row" id="NhanVien" v-cloak>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <div class="card" style="width:100%">
+            <div class="card-header text-body text-bold">
+                Danh sách nhân viên
+            </div>
+            <div class="card-body">
+                <div class="row" style="padding-bottom:5px;">
+                    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+                        <b-button variant="info" size="sm" model="modal-lg" v-on:click="ThemMoiNhanVien">
+                            <i class="fa fa-plus-circle " aria-hidden="true" style="padding-right:10px;"></i>
+                            Thêm mới nhân viên
+                        </b-button>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
+                        <grid id="gridNhanVien" ref="gridNhanVien" v-bind:columns="cols" v-bind:config="option"
+                              height="500px"> </grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <b-modal id="modelNhanVien" size="lg" title="Thông tin nhân viên" no-close-on-backdrop="true"
+                 class="bootstrap-dialog-draggable">
+            <b-container fluid> 
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Tên nhân viên</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="Ten" focus placeholder="Tên nhân viên" v-model="duLieu.TEN" dataType="String"
+                                 title="Tên nhân viên" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Chức vụ</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <select2 id="dropChucVu" ref="dropChucVu" style="width:90%!important" :options="dsChucVu"
+                                 v-model="duLieu.CHUCVUID">
+                        </select2>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Giới tính</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <select2 id="GIOITINH" ref="fropGioiTinh" style="width:90%!important" :options="dsGioiTinh"
+                                 v-model="duLieu.GIOITINH">
+                        </select2>
+                    </div>
+                </b-row>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Số điện thoại</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="DIENTHOAI" focus placeholder="Số điện thoại" v-model="duLieu.DIENTHOAI" dataType="String"
+                                 title="Số điện thoại không nhập trống" > </vue-txt>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Ngày sinh</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="NGAYSINH" focus placeholder="Ngày sinh" v-model="duLieu.NGAYSINH" dataType="Date"
+                                 title=" Ngày sinh  "> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Email </label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="EMAIL" focus placeholder="Email" v-model="duLieu.EMAIL" dataType="String"
+                                 title="Email không nhập trống"  > </vue-txt>
+                    </div>
+                </b-row>  
+            </b-container>
+            <template v-slot:modal-footer>
+                <b-row>
+                    <b-col cols="12">
+                        <b-button variant="info" size="sm" class="mr-1" v-on:click="LuulaiThongTin">
+                            <i class="fa fa-save" aria-hidden="true" style="padding-right:10px;"></i>
+                            Lưu lại
+                        </b-button>
+                    </b-col>
+                </b-row>
+            </template>
+        </b-modal>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const { createApp, onMounted, ref, reactive } = Vue
+
+
+    var Vuejs = createApp({
+        setup: function (props, ctx) {
+
+            const cols = reactive([ 
+                { id: "TEN", name: "Họ và tên", field: "TEN", minWidth: 300, filterType: "text" },
+                { id: "CHUCVU", name: "Chức vụ", field: "CHUCVU", minWidth: 150, filterType: "text" },
+                { id: "GIOITINH", name: "Giới tính", field: "GIOITINH", minWidth: 120, filterType: "text" },
+                { id: "DIENTHOAI", name: "Số điện thoại", field: "DIENTHOAI", minWidth: 120, filterType: "text" },
+                { id: "CHON", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButton, filterType: "none" }
+            ]);
+
+            const option = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+            });
+            const duLieu = reactive({});
+            const dsChucVu = reactive({});
+            const dsGioiTinh=reactive([{id: "Nam", text: "Nam"}, {id: "Nữ", text: "Nữ"}, {id: "Khác", "text": "Khác" }]);
+
+            onMounted(() => {
+                loadThongTin();
+                loadDuLieuChung();
+            });
+
+            function ThemMoiNhanVien() {
+                Reset();
+                Vuejs.$bvModal.show("modelNhanVien");
+            }
+
+            function LuulaiThongTin() {
+                if (!checkIsValid("modelNhanVien")) {
+                    return false;
+                }
+
+                var newUrl = danhMuc.urlNhanVienNhap
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(Vuejs.duLieu),
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.$refs.gridNhanVien.setDataSource(b_data);
+                        Vuejs.$bvModal.hide("modelNhanVien");
+                    }
+                });
+            }
+
+            return {
+                cols, duLieu, option, dsGioiTinh, dsChucVu,
+                ThemMoiNhanVien, LuulaiThongTin
+            }
+        }
+    }).mount('#NhanVien');
+
+
+    function AddButton(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += " <button  class='btn btn-info btn-sm' onclick=\"Xemchitiet('" + dataContext.Id + "', " + row + ")\"><i class='glyphicon glyphicon-edit'></i></button>";
+            str += "<button  onclick=\"Xoathongtin('" + dataContext.ID + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+
+    function Reset() {
+        Vuejs.duLieu = { TEN: '', ID: 0 };
+    }
+
+    function  loadDuLieuChung()
+    {
+        var newUrl = danhMuc.urlChucVuLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsChucVu=[];
+                b_data.forEach(function(val) {
+                     Vuejs.dsChucVu.push({ id: val.ID, text: val.TEN });
+                }); 
+            }
+        });
+    }
+
+    function Xemchitiet(Id, row) {
+        Vuejs.duLieu = Vuejs.$refs.gridNhanVien.getDataByRowIndex(row);
+        Vuejs.$bvModal.show("modelNhanVien");
+    }
+
+
+    function Xoathongtin(id, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlNhanVienXoa + "?Id=" + id;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridNhanVien.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function loadThongTin() {
+        var newUrl = danhMuc.urlNhanVienLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridNhanVien.setDataSource(b_data);
+            }
+        });
+    }
+</script>

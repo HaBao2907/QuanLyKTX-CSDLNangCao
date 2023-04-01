@@ -1,0 +1,252 @@
+﻿@{
+    ViewData["Title"] = "Báo hỏng thiết bị";
+}
+
+
+<div class="row" id="BaoHong" v-cloak>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <div class="card" style="width:100%">
+            <div class="card-header text-body text-bold">
+                Báo hỏng thiết bị
+            </div>
+            <div class="card-body">
+                <b-row>
+                    <div class="col-lg-1 col-md-2 col-sm-12 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Khu vực </label>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="KHUID" ref="dropKhu" v-on:select-value-change="chon_phong_selectValue"
+                                 style="width:90%!important" :options="dsKhu"
+                                 v-model="duLieu.KHUID">
+                        </select2>
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-12 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Phòng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12">
+                        <select2 id="droPhong" ref="droPhong" v-on:select-value-change="phong_selectValue"
+                                 style="width:90%!important" :options="dsPhong"
+                                 v-model="duLieu.PHONGID">
+                        </select2>
+                    </div>
+                </b-row>
+
+                <div class="row" style="padding-bottom:5px;">
+
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
+                        <grid id="gridBaoHong" ref="gridBaoHong"
+                              v-bind:columns="cols" v-bind:config="option"
+                              height="500px"> </grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <b-modal id="modelBaoHong" size="md" title="Thông tin báo hỏng thiết bị" no-close-on-backdrop="true"
+                 class="bootstrap-dialog-draggable">
+            <b-container fluid>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Mô tả</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <b-form-textarea id="textarea"
+                                         v-model="NoiDung"
+                                         placeholder="Nhập nội dung mô tả..."
+                                         rows="3"
+                                         max-rows="6"></b-form-textarea>
+                    </div>
+                </b-row>
+            </b-container>
+            <template v-slot:modal-footer>
+                <b-row>
+                    <b-col cols="12">
+                        <b-button variant="info" size="sm" class="mr-1" v-on:click="LuulaiThongTin">
+                            <i class="fa fa-save" aria-hidden="true" style="padding-right:10px;"></i>
+                            Lưu lại
+                        </b-button>
+                    </b-col>
+                </b-row>
+            </template>
+        </b-modal>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const { createApp, onMounted, ref, reactive } = Vue
+
+
+    var Vuejs = createApp({
+        data() {
+            return {
+                dsKhu: [], dsPhong: [], duLieu: {}
+            }
+        },
+        setup: function (props, ctx) {
+
+            const NoiDung=ref("");
+            const cols = reactive([
+                { id: "THIETBI", name: "ThietBi", field: "THIETBI", minWidth: 200, filterType: "text" },
+                { id: "SOLUONG", name: "Số lượng", field: "SOLUONG", minWidth: 120, filterType: "text", dataType: "Number" },
+                { id: "TRANG_THAI", name: "Tình trạng", field: "TRANG_THAI", minWidth: 200, filterType: "none", formatter: FormatTrangThai },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButtonThietBi, filterType: "none" }
+            ]);
+
+            const option = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+            });
+             
+            const dsLoai = reactive({});
+            const dsThietBi = reactive({});
+
+            onMounted(() => {
+                loadConfig();
+            });
+
+
+           
+
+            function LuulaiThongTin() {
+
+                var newUrl = danhMuc.urlBaoHong;
+                debugger;
+
+                var body ={
+                    PHONGID: Vuejs.duLieu.PHONGID,
+                    THIETBIID: Vuejs.duLieu.THIETBIID,
+                    NOIDUNG: NoiDung.value
+                };
+
+                 $.ajax({
+                    type: "POST",
+                    url: newUrl,
+                    data: JSON.stringify(body),
+                    dataType: "json",
+                    success: function (b_data) {
+                        showError("info", "Đã cập nhật thành công") ;
+                        NoiDung.value="";
+                        loadConfig();
+                    }
+                });
+
+            }
+
+            function phong_selectValue(val, text, obj, el) {
+                if (isNullOrEmty(val)) return;
+                var newUrl = danhMuc.urlPhongChiTiet + "?IdPhong=" + val;
+
+                $.ajax({
+                    type: "GET",
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.$refs.gridBaoHong.setDataSource(b_data);
+                    }
+                });
+            }
+            function chon_phong_selectValue(val, text, obj, el) {
+                if (isNullOrEmty(val)) return;
+                Vuejs.$refs.droPhong.setValue("");
+                var newUrl = danhMuc.urlPhongKhuLke + "?khuid=" + val + "&loaiid=";
+
+                $.ajax({
+                    type: "GET",
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.dsPhong = [];
+
+                        b_data.forEach(function (val, index) {
+                            Vuejs.dsPhong.push({ "id": val.ID, text: val.TEN });
+                        });
+
+                    }
+                });
+            }
+
+            return { 
+                cols, option, dsLoai, dsThietBi, NoiDung,
+                 LuulaiThongTin, chon_phong_selectValue, phong_selectValue
+            }
+        }
+    }).mount('#BaoHong');
+
+
+    function FormatTrangThai(row, cell, value, columnDef, dataContext) {
+        if (value.toString() != "") {
+            var str = "";
+            if (value.toString() == "0")
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-success">Thiết bị đang sử dụng</span></div>';
+            else
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-danger">Thiết bị hỏng</span></div>';
+            return str;
+        }
+        else return value;
+    }
+
+
+
+    function AddButtonThietBi(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += "<button  onclick=\"UpdateBaoHongThietBi('" + dataContext.PHONGID + "','" + dataContext.IDTHIETBI + "', " + row + " )\" class='btn btn-info btn-sm'><i class='glyphicon glyphicon-th-list'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+     
+
+    function Xemchitiet(Id, row) {
+        Vuejs.duLieu = Vuejs.$refs.gridBaoHong.getDataByRowIndex(row);
+        Vuejs.$bvModal.show("modelBaoHong");
+
+        var newUrl = danhMuc.urlBaoHongChiTiet + "?IdBaoHong=" + Id;
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridThietBi.setDataSource(b_data);
+            }
+        });
+
+
+    }
+
+    function UpdateBaoHongThietBi(phongId, thietbiId, row) {
+        Vuejs.duLieu = { PHONGID: phongId, THIETBIID: thietbiId, NOI_DUNG: "" };
+        Vuejs.NoiDung.value="";
+        Vuejs.$bvModal.show("modelBaoHong");
+    }
+
+
+
+    function loadConfig() {
+        var newUrl = danhMuc.urlKhuLKe
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsKhu = [];
+
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsKhu.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+    }
+
+
+</script>

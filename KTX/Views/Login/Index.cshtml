@@ -1,0 +1,157 @@
+﻿@using LibNetCore.Web
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1,
+            shrink-to-fit=no">
+        <title>Đăng nhập hệ thống</title>
+        <link rel="stylesheet"
+            href="~/lib/jquery/dist/css/jquery-ui.theme.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/jquery/dist/css/jquery-ui.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/fonts/css/all.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/fonts/css/font-awesome.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/select2/css/select2.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet"
+            href="~/lib/bootstrap/dist/css/bootstrap-vue.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet"
+            href="~/lib/bootstrap/dist/css/bootstrap-dialog.css"
+            asp-append-version="true" />
+        <link rel="stylesheet"
+            href="~/lib/bootstrap/dist/css/bootstrap-glyphicons.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/animate.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/LTE/css/adminlte.min.css"
+            asp-append-version="true" />
+        <link rel="stylesheet" href="~/css/login.css" asp-append-version="true"
+            />
+
+
+    @Html.RegisterCssFromResource()
+
+
+        <script src="~/lib/jquery/dist/js/jquery.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/moment/moment.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/js/jquery-ui.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/js/popper.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/js/jquery.blockUI.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap-dialog.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/select2/js/select2.min.js" asp-append-version="true"></script>
+        <script src="~/lib/jquery/dist/js/lodash.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/polyfill.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/Vuejs/vue.global.prod.js" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap-vue.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/bootstrap/dist/js/bootstrap-vue-icons.min.js"
+            asp-append-version="true"></script>
+        <script src="~/lib/LTE/js/adminlte.min.js" asp-append-version="true"></script>
+        <script src="~/js/site.js" asp-append-version="true"></script>
+            @Html.RegisterJsFromResource()
+
+
+        <style>
+        .form-control {
+            font-size: 14px !important;
+        }
+    </style>
+    </head>
+    <body>
+        <div class="login-form" id="dangNhap">
+            <form style="text-align:center;">
+                <div class="avatar"><i class="fade fa-2x fa-uber"></i></div>
+                <h4 class="modal-title">Đăng nhập hệ thống</h4>
+                <div class="form-group">
+                    <vue-txt placeholder="Thông tin tài khoản đăng nhập"
+                        v-model="dulieu.TaiKhoan" title="Tên đăng nhập không
+                        nhập trống " required="true"> </vue-txt>
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control form-control-sm"
+                        placeholder="Mật khẩu" v-model="dulieu.MatKhau">
+                </div>
+                <div class="form-group small clearfix">
+                    <b-form-checkbox id="Remember" style="float:left;"
+                        v-model="dulieu.Remember" value="C" unchecked-value="K">
+                        Ghi nhớ đăng nhập
+                    </b-form-checkbox>
+                    <a href="#" class="forgot-link">Quên mật khẩu? </a>
+                </div>
+
+                <button type="button" class="btn btn-info btn-block btn-md"
+                    v-on:click="Login">
+                    <i class="fa fa-sign-in" aria-hidden="true"
+                        style="padding-right:10px;"></i>
+                    Đăng nhập hệ thống
+                </button>
+                <hr />
+            </form>
+        </div>
+
+        <script type="text/javascript">
+
+        Vue.createApp({
+            data() {
+                return {
+                    dulieu: { TaiKhoan: "", MatKhau: "" },
+                    TenDangNhap: ""
+                }
+            },
+            methods: {
+                Login: function (evt) {
+
+                    if (!checkIsValid("dangNhap")) {
+                        return false;
+                    }
+
+
+                    var urlLogin = heThong.LOG_IN + "?taiKhoan=" + this.dulieu.TaiKhoan + "&matKhau=" + this.dulieu.MatKhau + "&Remember=" + this.dulieu.Remember;
+
+
+                    $.ajax({
+                        type: "POST",
+                        url: urlLogin,
+                        dataType: "json",
+                        success: function (b_data) { 
+                            var dl = b_data.nsd;
+                            window.localStorage.setItem("nsd", JSON.stringify(dl));
+                            window.location.assign(b_data.url);
+                        }
+                    });
+                },
+                Quaylai: function () {
+                    window.location.assign("@Url.Action("Index", "Home")");
+                },
+                DangKyTaiKhoan: function () {
+                    window.location.assign("@Url.Action("DangKyTaiKhoan", "Login")");
+                }
+            }
+        }).mount('#dangNhap') ;
+
+
+
+    </script>
+    </body>
+</html>

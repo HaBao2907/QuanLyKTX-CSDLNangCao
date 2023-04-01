@@ -1,0 +1,308 @@
+﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+body {
+    /*background-color: #4393d2 !important;*/
+    font-family:  'Segoe UI','Helvetica Neue',Helvetica,Roboto,Oxygen, Ubuntu,Cantarell,'Fira Sans','Droid Sans',sans-serif, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans", sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji"
+}
+
+[v-cloak] {
+    display: none !important;
+}
+
+.login {
+    margin-bottom: 5px;
+}
+
+.brand-link {
+    font-size: 1.2rem;
+    padding: 0.3125rem .5rem;
+}
+.navbar-nav .nav-link {
+    padding-right: 1rem !important;
+    padding-left: 1rem !important;
+    font-size: 14px !important;
+}
+
+nav.navbar {
+    background-color: #4393d2 !important;
+}
+
+.navbar-light .navbar-brand {
+    color: whitesmoke !important;
+}
+
+ 
+
+.header-right {
+    float: right;
+}
+
+.item-user {
+    float: right;
+}
+
+.card-header{
+background-color: aliceblue;
+}
+
+.user {
+    padding-top: 2px;
+    padding-left: 4px;
+    cursor: pointer;
+    padding-right: 20px;
+    float: right;
+}
+
+.item {
+    display: inline-block;
+    padding: 12px 8px;
+    position: relative;
+    vertical-align: middle;
+    cursor: pointer;
+    height: 55px;
+}
+
+._avatar {
+    width: 32px;
+    height: 32px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    overflow: hidden;
+    float: left;
+    margin-top: 2px;
+}
+
+.username { 
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-wrap: break-word; 
+    padding-left: 12px;
+    overflow:hidden;
+}
+
+.name {
+    font-weight: bold;
+    margin: 0;
+}
+
+.pos {
+    margin: 0;
+    opacity: .6;
+    font-size: 12px;
+}
+
+.down {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 20px;
+    line-height: 20px;
+    margin: auto;
+    bottom: 0;
+}
+
+.icon-triangle-down:before {
+    content: "\f05b";
+}
+
+.dropdown a:after {
+    content: "";
+}
+
+.item-user:hover .dropdown-menu {
+    display: block !important;
+    font-size: 14px !important;
+}
+
+.dropdown-menu { 
+    left: auto !important;
+    top: 99% !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+    z-index: 99;
+    border-radius: 0;
+}
+.dropdown-fixtop {
+    top: 20% !important;
+    transform: translate3d(0px, 23px, 0px) !important;
+} 
+
+.dropdown-item:hover, .dropdown-item:focus {
+    background-color: #428BCA !important;
+    cursor: pointer;
+    color: white !important;
+}
+
+ 
+.dropdown-divider {
+    margin: 0.2rem 0 !important;
+}
+
+.ui-widget-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #808080;
+    opacity: .4;
+    filter: Alpha(Opacity=30); /* support: IE8 */
+}
+
+.loadding {
+    height: 50px;
+    width: 50px;
+    background-image: url('../Images/Khac/loading.gif');
+    background-repeat: no-repeat;
+    float: left;
+    margin-left: 5px;
+    margin-right: 10px;
+}
+
+.username p {
+    color: white;
+}
+
+.navbar
+{
+padding:0px !important;
+}
+
+.navbar-nav .dropdown-menu {
+    margin-right: 10px !important;
+}
+  
+.node-extra {
+    display: table-cell;
+    vertical-align: middle;
+    width: 280px;
+    padding: 10px;
+    font-size: 13px;
+}
+ 
+.avatar {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    vertical-align: top;
+    overflow: hidden;
+    width: 40px;
+    height: 36px;
+    font-size: 22px;
+}
+.avatar-title {
+    overflow: hidden;
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin: 0px;
+    font-size:15px ;
+}
+.listInline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+.listInline > li {
+    display: inline;
+    margin: 0;
+    padding: 0;
+    font-size:13px !important;
+}
+
+.table td, .table th {
+    vertical-align:middle !important;
+}
+
+.product-name {
+    height: 50px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color:black;
+    text-decoration:none;
+    font-size:13px !important;
+}
+
+.modal-backdrop{
+    opacity:0.3 !important;
+}
+.modal-header {
+    padding: 0.5rem 1rem !important;
+    color: white;    
+    background-color: #4393d2 ;
+}
+
+.custom-control-label
+{
+    font-weight:400 !important;
+}
+
+.blockUI {
+    z-index: 2000 !important;
+}
+
+.nav-tabs .nav-link
+{
+    color:black !important;
+}
+
+/*select2*/
+.select2-selection__clear {
+    margin-top: -7px !important;
+}
+.select2-selection__rendered {
+    margin-top: -7px !important;
+    line-height: 26px !important;
+}
+.select2-container
+{
+    height:100% !important;
+}
+.select2-search__field
+{
+    padding:1px !important;
+}
+.modal-title
+{
+    font-size:17px !important;
+}
+
+.select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 27px !important;
+}
+
+.select2-container--default .select2-selection--single {
+    height: calc(1.7rem + 2px);
+    border-radius: 6px !important;
+}
+
+@media (min-width: 1200px) 
+{
+    .modal-xl {
+        max-width: 1200px;
+    }
+}
+
+@media (min-width: 1400px) {
+    .modal-xl {
+        max-width: 1350px;
+    }
+}
+@media (min-width: 1600px) {
+    .modal-xl {
+        max-width: 1500px;
+    }
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: white !important;
+    font-size: 14px !important;
+    font-weight: 600;
+}

@@ -1,0 +1,454 @@
+﻿@{
+    ViewData["Title"] = "Đăng ký phòng ở";
+}
+
+<style>
+    .ui-datepicker-calendar {
+        display: none;
+    }
+</style>
+
+<div class="row" id="DangKy" v-cloak>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <div class="card" style="width:100%">
+            <div class="card-header text-body text-bold">
+                Đăng ký phòng ở
+            </div>
+            <div class="card-body">
+                <div class="row" style="padding-bottom:5px;">
+                    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+                        <b-button variant="info" size="sm" model="modal-lg"
+                                  v-on:click="ThemMoiDangKy">
+                            <i class="fa fa-plus-circle " aria-hidden="true"
+                               style="padding-right:10px;"></i>
+                            Thêm mới đăng ký phòng
+                        </b-button>
+                    </div>
+                    <div class="col-md-12 col-lg-12 col-sm-12 col-sx-12">
+                        <grid id="gridDangKy" ref="gridDangKy"
+                              v-bind:columns="cols" v-bind:config="option"
+                              height="500px"> </grid>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+        <b-modal id="modelDangKy" size="lg" title="Thông tin phòng"
+                 no-close-on-backdrop="true"
+                 class="bootstrap-dialog-draggable">
+            <b-container fluid>
+                <b-row>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Khu vực (Tòa)</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="dropKhu" ref="dropKhu"
+                                 v-on:select-value-change="phong_selectValue"
+                                 style="width:90%!important" :options="dsKhu"
+                                 v-model="duLieu.KHUID">
+                        </select2>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Loại phòng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="dropLoai" ref="dropLoai"
+                                 v-on:select-value-change="phong_selectValue"
+                                 style="width:90%!important" :options="dsLoai"
+                                 v-model="duLieu.LOAIID">
+                        </select2>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Chọn phòng</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="droPhong" ref="droPhong" v-on:select-value-change="chon_phong_selectValue"
+                                 style="width:90%!important" :options="dsPhong"
+                                 v-model="duLieu.PHONGID">
+                        </select2>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1"
+                         style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Sinh viên</label><label style="color:red">*</label>
+                    </div>
+                    <div class="col-lg-10 col-md-8 col-sm-12"
+                         style="padding-bottom:6px;">
+                        <select2 id="dropSV" ref="dropSV"
+                                 style="width:90%!important" :options="dsSinhVien"
+                                 v-model="duLieu.SINHVIENID">
+                        </select2>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Từ tháng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="THANGD" focus placeholder="Từ tháng" v-model="duLieu.TUTHANG" dataType="Month"
+                                 title="Từ tháng" required="true"> </vue-txt>
+                    </div>
+                    <div class="col-lg-2 col-md-4 col-sm-4 pl-1" style="padding-bottom:6px;">
+                        <label class="font-weight-normal">Đến tháng</label>
+                    </div>
+                    <div class="col-lg-4 col-md-8 col-sm-12" style="padding-bottom:6px;">
+                        <vue-txt id="THANGC" focus placeholder="Từ tháng" v-model="duLieu.DENTHANG" dataType="Month"
+                                 title="Đến tháng" required="true"> </vue-txt>
+                    </div>
+                </b-row>
+                <b-row class="mt-1">
+                    <b-col cols="12" class="mt-0">
+                        <b-card no-body deck>
+                            <b-tabs card>
+                                <b-tab title="Danh sách sinh viên đăng ký" >
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12
+                                            col-sm-12 col-sx-12">
+                                            <grid id="gridSinhVien" v-on:cell-click="grid_sv_cell_click"
+                                                  ref="gridSinhVien"
+                                                  v-bind:columns="colsSinhVien"
+                                                  v-bind:config="optionCT"
+                                                  height="300px"> </grid>
+                                        </div>
+                                    </div>
+                                </b-tab>
+                                <b-tab title="Danh sách thiết bị">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12
+                                            col-sm-12 col-sx-12">
+                                            <grid id="gridDichVu" 
+                                                  ref="gridDichVu"
+                                                  v-bind:columns="colsThietBi"
+                                                  v-bind:config="optionCT"
+                                                  height="300px"> </grid>
+                                        </div>
+                                    </div>
+                                </b-tab>
+                            </b-tabs>
+                        </b-card>
+                    </b-col>
+                </b-row>
+            </b-container>
+            <template v-slot:modal-footer>
+                <b-row>
+                    <b-col cols="12">
+                        <b-button variant="info" size="sm" class="mr-1"
+                                  v-on:click="LuulaiThongTin">
+                            <i class="fa fa-save" aria-hidden="true"
+                               style="padding-right:10px;"></i>
+                            Lưu lại
+                        </b-button>
+                    </b-col>
+                </b-row>
+            </template>
+        </b-modal>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    const { createApp, onMounted, ref, reactive } = Vue
+
+
+    var Vuejs = createApp({
+        data() {
+            return {
+                dsPhong: [],
+                duLieu: { "TUTHANG": "", "DENTHANG": "" }
+            }
+        },
+        setup: function (props, ctx) {
+
+            const cols = reactive([
+                { id: "KHU", name: "Khu nhà", field: "KHU", minWidth: 130, filterType: "text" },
+                { id: "LOAI", name: "Loại phòng", field: "LOAI", minWidth: 130, filterType: "text" },
+                { id: "PHONG", name: "phòng", field: "PHONG", minWidth: 150, filterType: "text" },
+                { id: "GIA", name: "Giá phòng", field: "GIA", minWidth: 120, filterType: "text", dataType: "Money" },
+                { id: "Ten", name: "Đã đăng ký", field: "DANG_KY", minWidth: 200, filterType: "text", dataType: "Number" },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButton, filterType: "none" }
+            ]);
+            const colsSinhVien = reactive([
+                { id: "KHOA", name: "Khoa", field: "KHOA", minWidth: 130, filterType: "text" },
+                { id: "TEN", name: "Họ và tên", field: "TEN", minWidth: 200, filterType: "text" },
+                { id: "THOI_GIAN", name: "Thời gian đăng ký", field: "THOI_GIAN", minWidth: 120, filterType: "drop", formatter: FormatTrangThai },
+                { id: "Chon", name: "Thao tác", field: "CHON", minWidth: 80, formatter: AddButtonThietBi, filterType: "none" }
+            ]);
+            const colsThietBi = reactive([
+                { id: "THIETBI", name: "Tên thiết bị", field: "THIETBI", minWidth: 200, filterType: "text" },
+                { id: "SOLUONG", name: "Số lượng", field: "SOLUONG", minWidth: 120, filterType: "text" },
+                { id: "TRANG_THAI", name: "Tình trạng", field: "TRANG_THAI", minWidth: 120, filterType: "drop", formatter: FormatTrangThai },
+            ]);
+
+            const option = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+            });
+
+            const optionCT = reactive({
+                pageSize: 15,
+                paging: "scroll",
+                filter: true,
+                width: 710
+            });
+
+            var dsKhu = reactive({});
+            var dsLoai = reactive({});
+            var dsThietBi = reactive({});
+            var dsSinhVien = reactive({});
+
+            onMounted(() => {
+                loadThongTin();
+                loadConfig(); 
+            });
+
+
+
+            function ThemMoiDangKy() {
+                Reset();
+                Vuejs.$bvModal.show("modelDangKy");
+            }
+
+            function LuulaiThongTin() {
+                if (!checkIsValid("modelDangKy")) {
+                    return false;
+                }
+                 
+                debugger;
+
+                var newUrl = danhMuc.urlNVSinhVienDKNhap
+                $.ajax({
+                    type: "POST",
+                    data: JSON.stringify(Vuejs.duLieu),
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.$refs.gridDangKy.setDataSource(b_data);
+                        Vuejs.$bvModal.hide("modelDangKy");
+                    }
+                });
+            }
+
+
+
+            function phong_selectValue(val, text, obj, el) {
+                if (val == undefined) return;
+
+                Vuejs.$refs.droPhong.setValue("");
+                var newUrl = danhMuc.urlPhongKhuLke + "?khuid=" + Vuejs.duLieu.KHUID + "&loaiid=" + Vuejs.duLieu.LOAIID;
+
+                $.ajax({
+                    type: "GET",
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+                        Vuejs.dsPhong = [];
+
+                        b_data.forEach(function (val, index) {
+                            Vuejs.dsPhong.push({ "id": val.ID, text: val.TEN });
+                        });
+
+                       Vuejs.$refs.droPhong.setValue(Vuejs.duLieu.PHONGID);
+                    }
+                });
+            }
+
+
+            function chon_phong_selectValue(val, text, obj, el) {
+                 
+                lietkeDSPhongChon(val);
+            }
+            function lietkeDSPhongChon(phongId)
+            {
+                Vuejs.$refs.gridSinhVien.setDataSource([]);
+                Vuejs.$refs.gridDichVu.setDataSource([]); 
+                
+                if (isNullOrEmty(phongId)) return;
+
+                var newUrl = danhMuc.urlNVSinhVienDK + "?phongId=" + phongId;
+
+                $.ajax({
+                    type: "GET",
+                    url: newUrl,
+                    dataType: "json",
+                    success: function (b_data) {
+
+                        var data1 = b_data.Item1;
+                        var data2 = b_data.Item2;
+
+                        Vuejs.$refs.gridSinhVien.setDataSource(data1);
+                        Vuejs.$refs.gridDichVu.setDataSource(data2);
+                    }
+                });
+            }
+
+            function grid_sv_cell_click(row, cell, val, cols, data) { 
+                Vuejs.duLieu.TUTHANG=data.TUTHANG;
+                Vuejs.duLieu.DENTHANG=data.DENTHANG;
+                Vuejs.duLieu.SINHVIENID=data.SINHVIENID;
+                Vuejs.duLieu.PHONGID = data.PHONGID;
+                 
+            }
+
+
+            return {
+                cols, option, dsLoai, dsKhu, dsThietBi, colsThietBi, colsSinhVien, dsSinhVien, optionCT,
+                ThemMoiDangKy, LuulaiThongTin, phong_selectValue, chon_phong_selectValue, grid_sv_cell_click
+            }
+        }
+    }).mount('#DangKy');
+
+
+    function FormatTrangThai(row, cell, value, columnDef, dataContext) {
+        if (value.toString() != "") {
+            var str = "";
+            if (value.toString() == "0")
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-success">Thiết bị đang sử dụng</span></div>';
+            else
+                str = '<div style = "text-align:center; width: 100%;"><span class="badge badge-danger">Thiết bị hỏng</span></div>';
+            return str;
+        }
+        else return value;
+    }
+
+    function AddButton(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += " <button  class='btn btn-info btn-sm' onclick=\"Xemchitiet('" + dataContext.ID + "', " + row + ")\"><i class='glyphicon glyphicon-edit'></i></button>";
+            str += "<button  onclick=\"Xoathongtin('" + dataContext.PHONGID + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+    function AddButtonThietBi(row, cell, value, columnDef, dataContext) {
+        if (value != "") {
+            var str = "";
+            str = " <div style = 'text-align: center; width:100%;'> ";
+            str += "<button  onclick=\"XoathongtinTB('" + dataContext.SINHVIENID + "','" + dataContext.PHONGID + "', " + row + " )\" class='btn btn-danger btn-sm'><i class='glyphicon glyphicon-remove'></i></button></div> ";
+
+            return str;
+        }
+        else return value;
+    }
+
+
+    function Reset() {
+        Vuejs.duLieu = { PHONGID: "", KHUID: "", LOAIID: "",  "TUTHANG": "", "DENTHANG": "" };
+    }
+
+    function Xemchitiet(Id, row) {
+        debugger;
+        Vuejs.duLieu = Vuejs.$refs.gridDangKy.getDataByRowIndex(row);
+        Vuejs.$bvModal.show("modelDangKy");
+
+         
+    }
+
+    function XoathongtinTB(sinhvienId, phongId, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlNVSinhVienCTXoa + "?phongId=" + phongId + "&sinhvienId=" + sinhvienId;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridSinhVien.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function Xoathongtin(id, row) {
+        confirmBox(function (dialog, msg) {
+            var newUrl = danhMuc.urlNVSinhVienXoa + "?phongId=" + id;
+
+            $.ajax({
+                type: "GET",
+                url: newUrl,
+                dataType: "json",
+                success: function (b_data) {
+                    Vuejs.$refs.gridDangKy.deleteRow(row);
+                }
+            });
+
+            dialog.close();
+        });
+    }
+
+    function loadConfig() {
+        var newUrl = danhMuc.urlKhuLKe
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.dsKhu = [];
+                Vuejs.dsPhong = [];
+                Vuejs.duLieu.PHONGID = "";
+
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsKhu.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+
+        var newUrl = danhMuc.urlLoaiPhongLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+
+                Vuejs.dsLoai = [];
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsLoai.push({ "id": val.ID, text: val.TEN });
+                });
+            }
+        });
+
+
+        var newUrl = danhMuc.urlSinhVienLKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) { 
+                Vuejs.dsSinhVien = [];
+                b_data.forEach(function (val, index) {
+                    Vuejs.dsSinhVien.push({ "id": val.MA, "text": val.TEN });
+                });
+            }
+        });
+    }
+
+    function loadThongTin() {
+        var newUrl = danhMuc.urlNVSinhVienDKLietKe
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            dataType: "json",
+            success: function (b_data) {
+                Vuejs.$refs.gridDangKy.setDataSource(b_data);
+            }
+        });
+    }
+</script>
